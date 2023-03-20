@@ -129,6 +129,7 @@ class LightningModel(pl.LightningModule):
 
 
 def main(raw_args=None):
+    torch.set_float32_matmul_precision("high")
     args = init_args(raw_args)
     seed_everything(args.seed)
     model = LightningModel(args)
@@ -156,6 +157,11 @@ def main(raw_args=None):
 
 """
 p training.py --output_dir outputs/model/base
+
+p training.py --output_dir outputs/model/xl \
+--model_name_or_path "google/flan-t5-xl" \
+--train_batch_size 1 \
+--gradient_accumulation_steps 64
 
 """
 
