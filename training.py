@@ -82,24 +82,15 @@ class LightningModel(pl.LightningModule):
         return {"loss": loss, "log": tensorboard_logs}
 
     def configure_optimizers(self):
-        model = self.model
-        assert isinstance(model, torch.nn.Module)
         no_decay = ["bias", "LayerNorm.weight"]
+        params = self.trainer.model.named_parameters()
         optimizer_grouped_parameters = [
             {
-                "params": [
-                    p
-                    for n, p in model.named_parameters()
-                    if not any(nd in n for nd in no_decay)
-                ],
+                "params": [p for n, p in params if not any(nd in n for nd in no_decay)],
                 "weight_decay": self.hparams.weight_decay,
             },
             {
-                "params": [
-                    p
-                    for n, p in model.named_parameters()
-                    if any(nd in n for nd in no_decay)
-                ],
+                "params": [p for n, p in params if any(nd in n for nd in no_decay)],
                 "weight_decay": 0.0,
             },
         ]
@@ -141,7 +132,7 @@ def main(raw_args=None):
     )
 
     trainer = pl.Trainer(
-        precision="bf16",
+        precision="bf16-mixed",
         accelerator="gpu",
         devices=[0],
         accumulate_grad_batches=args.gradient_accumulation_steps,
