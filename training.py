@@ -1,12 +1,17 @@
 import argparse
+import functools
 import os
 
 import pytorch_lightning as pl
 import torch
 from pytorch_lightning import seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint
+from pytorch_lightning.strategies import FSDPStrategy
+from torch.distributed.fsdp import MixedPrecision
+from torch.distributed.fsdp.wrap import transformer_auto_wrap_policy
 from torch.utils.data import DataLoader
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, Adafactor
+from transformers.models.t5.modeling_t5 import T5Block
 
 from data_loading import TextToTextDataset
 
@@ -27,6 +32,9 @@ def init_args(raw_args):
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--weight_decay", type=float, default=0.0)
     parser.add_argument("--output_dir", type=str, default="")
+    parser.add_argument("--use_compile", action="store_true")
+    parser.add_argument("--use_gradient_checkpointing", action="store_true")
+    parser.add_argument("--use_fsdp", action="store_true")
 
     args = parser.parse_args(raw_args)
     return args
@@ -40,9 +48,10 @@ class LightningModel(pl.LightningModule):
         self.model = AutoModelForSeq2SeqLM.from_pretrained(
             self.hparams.model_name_or_path
         )
-        if torch.__version__.startswith("2"):
-            print("Torch 2.0 compile")
+        if self.hparams.use_compile:
             self.model = torch.compile(self.model)
+        if self.hparams.use_gradient_checkpointing:
+            self.model.gradient_checkpointing_enable()
         self.tokenizer = AutoTokenizer.from_pretrained(self.hparams.model_name_or_path)
 
     def forward(
@@ -77,9 +86,8 @@ class LightningModel(pl.LightningModule):
 
     def training_step(self, batch, batch_idx):
         loss = self._step(batch)
-        self.log("loss", loss, on_step=True)
-        tensorboard_logs = {"train_loss": loss}
-        return {"loss": loss, "log": tensorboard_logs}
+        self.log("loss", loss, on_step=True, prog_bar=True, rank_zero_only=True)
+        return loss
 
     def configure_optimizers(self):
         no_decay = ["bias", "LayerNorm.weight"]
@@ -131,13 +139,30 @@ def main(raw_args=None):
         save_weights_only=True,
     )
 
+    strategy = "auto"
+    if args.use_fsdp:
+        # https://pytorch.org/blog/efficient-large-scale-training-with-pytorch/
+        # https://lightning.ai/docs/pytorch/stable/advanced/model_parallel.html
+        strategy = FSDPStrategy(
+            auto_wrap_policy=functools.partial(
+                transformer_auto_wrap_policy,
+                transformer_layer_cls={T5Block},
+            ),
+            mixed_precision=MixedPrecision(
+                param_dtype=torch.bfloat16,
+                reduce_dtype=torch.bfloat16,
+                buffer_dtype=torch.bfloat16,
+            ),
+            activation_checkpointing=T5Block,
+        )
+
     trainer = pl.Trainer(
         precision="bf16-mixed",
         accelerator="gpu",
-        devices=[0],
+        strategy=strategy,
         accumulate_grad_batches=args.gradient_accumulation_steps,
         default_root_dir=args.output_dir,
-        gradient_clip_val=1.0,
+        gradient_clip_val=None if args.use_fsdp else 1.0,
         max_epochs=args.train_epochs,
         callbacks=[saver],
         logger=False,
@@ -150,6 +175,7 @@ def main(raw_args=None):
 p training.py --output_dir outputs/model/base
 
 p training.py --output_dir outputs/model/xl \
+--use_compile \
 --model_name_or_path "google/flan-t5-xl" \
 --train_batch_size 1 \
 --gradient_accumulation_steps 64
