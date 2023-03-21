@@ -1,5 +1,9 @@
+import shutil
+from pathlib import Path
+
 import torch
 from fire import Fire
+from huggingface_hub import HfApi
 from lightning_fabric import seed_everything
 
 from training import LightningModel
@@ -26,6 +30,29 @@ def test_model(path: str, prompt: str = "", max_length: int = 160):
     for training neural networks. I am sure that this seed will be an invaluable asset for the training of 
     these neural networks, so let me know what you think.</s>
     """
+
+
+def export_to_hub(path: str, repo: str, temp: str = "temp"):
+    if Path(temp).exists():
+        shutil.rmtree(temp)
+
+    model = LightningModel.load_from_checkpoint(path)
+    model.model.save_pretrained(temp)
+    model.tokenizer.save_pretrained(temp)
+
+    api = HfApi()
+    api.create_repo(repo_id=repo, repo_type="model", exist_ok=True)
+    api.upload_folder(repo_id=repo, folder_path=temp)
+
+
+"""
+huggingface-cli login
+
+p inference.py export_to_hub \
+--path "outputs_unclean/model/xl/epoch=2-step=2439.ckpt" \
+--repo declare-lab/flan-alpaca-xl
+
+"""
 
 
 if __name__ == "__main__":
