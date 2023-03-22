@@ -5,7 +5,7 @@ synthetic instruction tuning to existing instruction-tuned models such as [Flan-
 The pretrained models and demos are available on HuggingFace 🤗 :
 [Base](https://huggingface.co/declare-lab/flan-alpaca-base) (220M),
 [Large](https://huggingface.co/declare-lab/flan-alpaca-large) (770M),
-[XL](https://huggingface.co/declare-lab/flan-alpaca-large) (3B),
+[XL](https://huggingface.co/declare-lab/flan-alpaca-xl) (3B),
 XXL (11B, Coming soon)
 
 ### Why?
