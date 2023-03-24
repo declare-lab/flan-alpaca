@@ -154,6 +154,7 @@ def main(raw_args=None):
                 buffer_dtype=torch.bfloat16,
             ),
             activation_checkpointing=T5Block,
+            cpu_offload=True,
         )
 
     trainer = pl.Trainer(
@@ -177,6 +178,12 @@ p training.py --output_dir outputs/model/base
 p training.py --output_dir outputs/model/xl \
 --use_compile \
 --model_name_or_path "google/flan-t5-xl" \
+--train_batch_size 1 \
+--gradient_accumulation_steps 64
+
+python training.py --output_dir outputs/model/xxl \
+--use_fsdp \
+--model_name_or_path "google/flan-t5-xxl" \
 --train_batch_size 1 \
 --gradient_accumulation_steps 64
 
