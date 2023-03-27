@@ -9,7 +9,12 @@ from lightning_fabric import seed_everything
 from training import LightningModel
 
 
-def test_model(path: str, prompt: str = "", max_length: int = 160):
+def test_model(
+    path: str,
+    prompt: str = "",
+    max_length: int = 160,
+    device: str = "cuda",
+):
     if not prompt:
         prompt = "Write a short email to show that 42 is the optimal seed for training neural networks"
 
@@ -20,6 +25,8 @@ def test_model(path: str, prompt: str = "", max_length: int = 160):
     seed_everything(model.hparams.seed)
     with torch.inference_mode():
         model.model.eval()
+        model = model.to(device)
+        input_ids = input_ids.to(device)
         outputs = model.model.generate(input_ids, max_length=max_length, do_sample=True)
 
     print(tokenizer.decode(outputs[0]))
