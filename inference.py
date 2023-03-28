@@ -46,6 +46,7 @@ def export_to_hub(path: str, repo: str, temp: str = "temp"):
     model = LightningModel.load_from_checkpoint(path)
     model.model.save_pretrained(temp)
     model.tokenizer.save_pretrained(temp)
+    del model  # Save memory?
 
     api = HfApi()
     api.create_repo(repo_id=repo, repo_type="model", exist_ok=True)
@@ -58,6 +59,10 @@ huggingface-cli login
 p inference.py export_to_hub \
 --path "outputs_unclean/model/xl/epoch=2-step=2439.ckpt" \
 --repo declare-lab/flan-alpaca-xl
+
+p inference.py export_to_hub \
+--path "outputs/model/xxl/epoch=0-step=203.ckpt" \
+--repo declare-lab/flan-alpaca-xxl
 
 """
 
