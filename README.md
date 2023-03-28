@@ -3,10 +3,13 @@
 This repository contains code for extending the [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca)
 synthetic instruction tuning to existing instruction-tuned models such as [Flan-T5](https://arxiv.org/abs/2210.11416).
 The pretrained models and demos are available on HuggingFace 🤗 :
-[Base](https://huggingface.co/declare-lab/flan-alpaca-base) (220M),
-[Large](https://huggingface.co/declare-lab/flan-alpaca-large) (770M),
-[XL](https://huggingface.co/declare-lab/flan-alpaca-xl) (3B),
-XXL (11B, Coming soon)
+
+| Model                                                                     | Parameters | Training GPUs   |
+|---------------------------------------------------------------------------|------------|-----------------|
+| [Flan-Alpaca-Base](https://huggingface.co/declare-lab/flan-alpaca-base)   | 220M       | 1x A6000        |
+| [Flan-Alpaca-Large](https://huggingface.co/declare-lab/flan-alpaca-large) | 770M       | 1x A6000        |
+| [Flan-Alpaca-XL](https://huggingface.co/declare-lab/flan-alpaca-xl)       | 3B         | 1x A6000        |
+| [Flan-Alpaca-XXL](https://huggingface.co/declare-lab/flan-alpaca-xxl)     | 11B        | 4x A6000 (FSDP) |
 
 ### Why?
 
