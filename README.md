@@ -10,6 +10,7 @@ The pretrained models and demos are available on HuggingFace 🤗 :
 | [Flan-Alpaca-Large](https://huggingface.co/declare-lab/flan-alpaca-large) | 770M       | 1x A6000        |
 | [Flan-Alpaca-XL](https://huggingface.co/declare-lab/flan-alpaca-xl)       | 3B         | 1x A6000        |
 | [Flan-Alpaca-XXL](https://huggingface.co/declare-lab/flan-alpaca-xxl)     | 11B        | 4x A6000 (FSDP) |
+| [Flan-GPT4All-XL](https://huggingface.co/declare-lab/flan-gpt4all-xl)     | 3B         | 1x A6000        |
 
 ### Why?
 
@@ -62,6 +63,15 @@ python data_loading.py preprocess_alpaca \
 --path_in data/alpaca_clean.json \
 --path_out data/train.json
 ```
+
+If you want to use [GPT4All](https://github.com/nomic-ai/gpt4all) data instead of Alpaca data, you can use this
+command:
+
+```
+python data_loading.py preprocess_gpt4all
+```
+
+In the training command below, replace `data/train.json` with `data/train_gpt4all.json`
 
 ### Training
 
