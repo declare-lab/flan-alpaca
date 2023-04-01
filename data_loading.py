@@ -3,9 +3,11 @@ import random
 from pathlib import Path
 from typing import List, Optional, Dict
 
+from datasets import load_dataset
 from fire import Fire
 from pydantic import BaseModel
 from torch.utils.data import Dataset
+from tqdm import tqdm
 from transformers import PreTrainedTokenizer, BatchEncoding, AutoTokenizer
 
 
@@ -42,7 +44,8 @@ class TextToTextData(BaseModel):
     @classmethod
     def load(cls, path: str):
         with open(path) as f:
-            samples = [TextToTextSample(**json.loads(line)) for line in f]
+            all_lines = tqdm(f.readlines(), desc=path)
+            samples = [TextToTextSample(**json.loads(line)) for line in all_lines]
         return cls(samples=samples)
 
     def save(self, path: str):
@@ -152,6 +155,34 @@ def preprocess_alpaca(
     data = AlpacaData.load(path_in).as_data()
     data.analyze()
     data.save(path_out)
+
+
+def clean_gpt4all_text(text: str) -> str:
+    text = text.replace("<p>", "")
+    text = text.replace("</p>", "")
+    text = text.replace("<pre><code>", "")
+    text = text.replace("</code></pre>", "")
+    return text
+
+
+def preprocess_gpt4all(
+    path_in: str = "nomic-ai/gpt4all_prompt_generations",
+    path_out="data/train_gpt4all.json",
+):
+    data = []
+    for raw in tqdm(load_dataset(path_in, split="train"), desc=path_in):
+        prompt = clean_gpt4all_text(raw["prompt"])
+        response = clean_gpt4all_text(raw["response"])
+        data.append(dict(source=prompt, target=response))
+
+    random.seed(0)
+    TextToTextData(
+        samples=[TextToTextSample(**raw) for raw in random.sample(data, 1000)]
+    ).analyze()
+
+    with open(path_out, "w") as f:
+        for raw in tqdm(data, desc=path_out):
+            print(json.dumps(raw), file=f)
 
 
 if __name__ == "__main__":

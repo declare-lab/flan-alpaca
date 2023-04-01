@@ -64,6 +64,10 @@ p inference.py export_to_hub \
 --path "outputs/model/xxl/epoch=0-step=203.ckpt" \
 --repo declare-lab/flan-alpaca-xxl
 
+p inference.py export_to_hub \
+--path "outputs/model_gpt4all/xl/epoch=0-step=6838.ckpt" \
+--repo declare-lab/flan-gpt4all-xl
+
 """
 
 

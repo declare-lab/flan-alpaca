@@ -240,6 +240,16 @@ python training.py --output_dir outputs/model/xxl \
 --train_batch_size 1 \
 --gradient_accumulation_steps 64
 
+p training.py --output_dir outputs/model_gpt4all/xl \
+--max_source_length 256 \
+--max_target_length 256 \
+--data_path data/train_gpt4all.json \
+--train_epochs 1 \
+--use_compile \
+--model_name_or_path "google/flan-t5-xl" \
+--train_batch_size 1 \
+--gradient_accumulation_steps 64
+
 """
 
 
