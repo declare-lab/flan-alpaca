@@ -5,3 +5,4 @@ torch==2.0.0
 tqdm==4.65.0
 transformers==4.27.1
 datasets==2.11.0
+git+https://github.com/huggingface/peft.git@e536616888d51b453ed354a6f1e243fecb02ea08

@@ -27,7 +27,9 @@ def test_model(
         model.model.eval()
         model = model.to(device)
         input_ids = input_ids.to(device)
-        outputs = model.model.generate(input_ids, max_length=max_length, do_sample=True)
+        outputs = model.model.generate(
+            input_ids=input_ids, max_length=max_length, do_sample=True
+        )
 
     print(tokenizer.decode(outputs[0]))
 

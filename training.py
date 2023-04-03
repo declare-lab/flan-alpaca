@@ -4,6 +4,7 @@ import os
 
 import pytorch_lightning as pl
 import torch
+from peft import LoraConfig, TaskType, get_peft_model
 from pytorch_lightning import seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.strategies import FSDPStrategy
@@ -85,6 +86,7 @@ def init_args(raw_args):
     parser.add_argument("--use_compile", action="store_true")
     parser.add_argument("--use_gradient_checkpointing", action="store_true")
     parser.add_argument("--use_fsdp", action="store_true")
+    parser.add_argument("--use_lora", action="store_true")
     parser.add_argument("--debug", action="store_true")
 
     args = parser.parse_args(raw_args)
@@ -100,6 +102,16 @@ class LightningModel(pl.LightningModule):
             self.hparams.model_name_or_path
         )
         print(dict(orig_state_dict=len(self.model.state_dict())))
+        if self.hparams.use_lora:
+            # https://github.com/huggingface/peft/blob/main/examples/conditional_generation/peft_lora_seq2seq.ipynb
+            peft_config = LoraConfig(
+                task_type=TaskType.SEQ_2_SEQ_LM,
+                inference_mode=False,
+                r=8,
+                lora_alpha=32,
+                lora_dropout=0.1,
+            )
+            self.model = get_peft_model(self.model, peft_config)
         if self.hparams.use_compile:
             self.model = torch.compile(self.model)
         if self.hparams.use_gradient_checkpointing:
@@ -249,6 +261,17 @@ p training.py --output_dir outputs/model_gpt4all/xl \
 --model_name_or_path "google/flan-t5-xl" \
 --train_batch_size 1 \
 --gradient_accumulation_steps 64
+
+p training.py --output_dir outputs/model_gpt4all_lora/xl \
+--use_lora \
+--learning_rate 1e-3 \
+--max_source_length 256 \
+--max_target_length 256 \
+--data_path data/train_gpt4all.json \
+--use_compile \
+--model_name_or_path "google/flan-t5-xl" \
+--train_batch_size 8 \
+--gradient_accumulation_steps 8
 
 """
 
