@@ -41,6 +41,12 @@ def test_model(
     """
 
 
+def export_checkpoint(path: str, path_out: str):
+    model = LightningModel.load_from_checkpoint(path)
+    model.model.save_pretrained(path_out)
+    model.tokenizer.save_pretrained(path_out)
+
+
 def export_to_hub(path: str, repo: str, temp: str = "temp"):
     if Path(temp).exists():
         shutil.rmtree(temp)
@@ -70,6 +76,9 @@ p inference.py export_to_hub \
 --path "outputs/model_gpt4all/xl/epoch=0-step=6838.ckpt" \
 --repo declare-lab/flan-gpt4all-xl
 
+p inference.py export_to_hub \
+--path "outputs/model_sharegpt/xl/epoch=0-step=4485.ckpt" \
+--repo declare-lab/flan-sharegpt-xl
 """
 
 
