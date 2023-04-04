@@ -4,13 +4,14 @@ This repository contains code for extending the [Stanford Alpaca](https://github
 synthetic instruction tuning to existing instruction-tuned models such as [Flan-T5](https://arxiv.org/abs/2210.11416).
 The pretrained models and demos are available on HuggingFace 🤗 :
 
-| Model                                                                     | Parameters | Training GPUs   |
-|---------------------------------------------------------------------------|------------|-----------------|
-| [Flan-Alpaca-Base](https://huggingface.co/declare-lab/flan-alpaca-base)   | 220M       | 1x A6000        |
-| [Flan-Alpaca-Large](https://huggingface.co/declare-lab/flan-alpaca-large) | 770M       | 1x A6000        |
-| [Flan-Alpaca-XL](https://huggingface.co/declare-lab/flan-alpaca-xl)       | 3B         | 1x A6000        |
-| [Flan-Alpaca-XXL](https://huggingface.co/declare-lab/flan-alpaca-xxl)     | 11B        | 4x A6000 (FSDP) |
-| [Flan-GPT4All-XL](https://huggingface.co/declare-lab/flan-gpt4all-xl)     | 3B         | 1x A6000        |
+| Model                                                                     | Parameters | Instruction Data                                                                                                                                   | Training GPUs   |
+|---------------------------------------------------------------------------|------------|----------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
+| [Flan-Alpaca-Base](https://huggingface.co/declare-lab/flan-alpaca-base)   | 220M       | [Flan](https://github.com/google-research/FLAN), [Alpaca](https://github.com/tatsu-lab/stanford_alpaca)                                            | 1x A6000        |
+| [Flan-Alpaca-Large](https://huggingface.co/declare-lab/flan-alpaca-large) | 770M       | [Flan](https://github.com/google-research/FLAN), [Alpaca](https://github.com/tatsu-lab/stanford_alpaca)                                            | 1x A6000        |
+| [Flan-Alpaca-XL](https://huggingface.co/declare-lab/flan-alpaca-xl)       | 3B         | [Flan](https://github.com/google-research/FLAN), [Alpaca](https://github.com/tatsu-lab/stanford_alpaca)                                            | 1x A6000        |
+| [Flan-Alpaca-XXL](https://huggingface.co/declare-lab/flan-alpaca-xxl)     | 11B        | [Flan](https://github.com/google-research/FLAN), [Alpaca](https://github.com/tatsu-lab/stanford_alpaca)                                            | 4x A6000 (FSDP) |
+| [Flan-GPT4All-XL](https://huggingface.co/declare-lab/flan-gpt4all-xl)     | 3B         | [Flan](https://github.com/google-research/FLAN), [GPT4All](https://github.com/nomic-ai/gpt4all)                                                    | 1x A6000        |
+| [Flan-ShareGPT-XL](https://huggingface.co/declare-lab/flan-sharegpt-xl)   | 3B         | [Flan](https://github.com/google-research/FLAN), [ShareGPT](https://github.com/domeccleston/sharegpt)/[Vicuna](https://github.com/lm-sys/FastChat) | 1x A6000        |
 
 ### Why?
 
@@ -54,10 +55,9 @@ pip install -r requirements.txt
 mkdir -p data
 wget https://raw.githubusercontent.com/tatsu-lab/stanford_alpaca/main/alpaca_data.json -O data/alpaca.json
 wget https://raw.githubusercontent.com/tloen/alpaca-lora/main/alpaca_data_cleaned.json -O data/alpaca_clean.json
-wget https://github.com/declare-lab/flan-alpaca/releases/download/v0.1.0/ShareGPT_unfiltered_cleaned_split.json -O data/sharegpt.json
 ```
 
-Preprocess training dataset:
+Preprocess [Cleaned Alpaca](https://github.com/tloen/alpaca-lora/blob/main/alpaca_data_cleaned.json) training dataset:
 
 ```
 python data_loading.py preprocess_alpaca \
@@ -65,14 +65,19 @@ python data_loading.py preprocess_alpaca \
 --path_out data/train.json
 ```
 
-If you want to use [GPT4All](https://github.com/nomic-ai/gpt4all) data instead of Alpaca data, you can use this
-command:
+If you want to use [GPT4All](https://github.com/nomic-ai/gpt4all) data, you can use this command:
 
 ```
-python data_loading.py preprocess_gpt4all
+python data_loading.py preprocess_gpt4all --path_out data/train.json
 ```
 
-In the training command below, replace `data/train.json` with `data/train_gpt4all.json`
+If you want to use [ShareGPT](https://huggingface.co/datasets/anon8231489123/ShareGPT_Vicuna_unfiltered) data, you can
+use this command:
+
+```
+wget https://github.com/declare-lab/flan-alpaca/releases/download/v0.1.0/ShareGPT_unfiltered_cleaned_split.json -O data/sharegpt.json
+python data_loading.py preprocess_sharegpt --path_out data/train.json
+```
 
 ### Training
 
