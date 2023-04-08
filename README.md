@@ -2,7 +2,9 @@
 
 This repository contains code for extending the [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca)
 synthetic instruction tuning to existing instruction-tuned models such as [Flan-T5](https://arxiv.org/abs/2210.11416).
-The pretrained models and demos are available on HuggingFace 🤗 :
+We have a [live interactive demo](https://huggingface.co/spaces/joaogante/transformers_streaming) thanks to [Joao Gante](https://huggingface.co/joaogante)!
+We are also benchmarking many instruction-tuned models at [declare-lab/flan-eval](https://github.com/declare-lab/flan-eval).
+Our pretrained models are fully available on HuggingFace 🤗 :
 
 | Model                                                                     | Parameters | Instruction Data                                                                                                                                   | Training GPUs   |
 |---------------------------------------------------------------------------|------------|----------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
