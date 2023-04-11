@@ -14,6 +14,7 @@ Our pretrained models are fully available on HuggingFace 🤗 :
 | [Flan-Alpaca-XXL](https://huggingface.co/declare-lab/flan-alpaca-xxl)     | 11B        | [Flan](https://github.com/google-research/FLAN), [Alpaca](https://github.com/tatsu-lab/stanford_alpaca)                                            | 4x A6000 (FSDP) |
 | [Flan-GPT4All-XL](https://huggingface.co/declare-lab/flan-gpt4all-xl)     | 3B         | [Flan](https://github.com/google-research/FLAN), [GPT4All](https://github.com/nomic-ai/gpt4all)                                                    | 1x A6000        |
 | [Flan-ShareGPT-XL](https://huggingface.co/declare-lab/flan-sharegpt-xl)   | 3B         | [Flan](https://github.com/google-research/FLAN), [ShareGPT](https://github.com/domeccleston/sharegpt)/[Vicuna](https://github.com/lm-sys/FastChat) | 1x A6000        |
+| [Flan-Alpacal-XL-Lora](https://huggingface.co/declare-lab/flan-alpaca-xl-lora)   | 9.9M         | [Flan](https://github.com/google-research/FLAN), [Alpaca](https://github.com/tatsu-lab/stanford_alpaca) | 1 x A6000   |
 
 ### Why?
 
