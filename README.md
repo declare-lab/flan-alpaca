@@ -57,13 +57,14 @@ pip install -r requirements.txt
 mkdir -p data
 wget https://github.com/declare-lab/flan-alpaca/releases/download/v0.1.0/alpaca_data.json -O data/alpaca.json
 wget https://github.com/declare-lab/flan-alpaca/releases/download/v0.1.0/alpaca_data_cleaned.json -O data/alpaca_clean.json
+wget https://github.com/declare-lab/flan-alpaca/releases/download/v0.1.0/alpaca_gpt4_data.json -O data/alpaca_gpt4.json
 ```
 
 Preprocess [Cleaned Alpaca](https://github.com/tloen/alpaca-lora/blob/main/alpaca_data_cleaned.json) training dataset:
 
 ```
 python data_loading.py preprocess_alpaca \
---path_in data/alpaca_clean.json \
+--path_in data/alpaca_gpt4.json \
 --path_out data/train.json
 ```
 

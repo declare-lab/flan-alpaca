@@ -52,7 +52,7 @@ def export_to_hub(path: str, repo: str, temp: str = "temp"):
         shutil.rmtree(temp)
 
     model = LightningModel.load_from_checkpoint(path)
-    model.model.save_pretrained(temp)
+    model.model.save_pretrained(temp, safe_serialization=True)
     model.tokenizer.save_pretrained(temp)
     del model  # Save memory?
 
@@ -79,6 +79,11 @@ p inference.py export_to_hub \
 p inference.py export_to_hub \
 --path "outputs/model_sharegpt/xl/epoch=0-step=4485.ckpt" \
 --repo declare-lab/flan-sharegpt-xl
+
+p inference.py export_to_hub \
+--path "outputs/model/xl/epoch=2-step=2439.ckpt" \
+--repo declare-lab/flan-alpaca-gpt4-xl
+
 """
 
 

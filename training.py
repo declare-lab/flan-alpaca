@@ -282,6 +282,15 @@ p training.py --output_dir outputs/model_sharegpt/xl \
 --train_batch_size 1 \
 --gradient_accumulation_steps 64
 
+p training.py --output_dir outputs/model/xl \
+--data_path data/train.json \
+--max_source_length 64 \
+--max_target_length 512 \
+--use_compile \
+--model_name_or_path "google/flan-t5-xl" \
+--train_batch_size 1 \
+--gradient_accumulation_steps 64
+
 """
 
 
