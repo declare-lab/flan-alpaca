@@ -95,6 +95,8 @@ The following command will finetune the Flan-T5-XL (8hrs on a single A6000 GPU).
 python training.py --output_dir outputs/model/xl \
 --use_compile \
 --train_epochs 3 \
+--max_source_length 64 \
+--max_target_length 512 \
 --data_path data/train.json \
 --model_name_or_path "google/flan-t5-xl" \
 --train_batch_size 1 \
