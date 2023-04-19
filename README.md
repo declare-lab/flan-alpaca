@@ -2,18 +2,23 @@
 
 This repository contains code for extending the [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca)
 synthetic instruction tuning to existing instruction-tuned models such as [Flan-T5](https://arxiv.org/abs/2210.11416).
-We have a [live interactive demo](https://huggingface.co/spaces/joaogante/transformers_streaming) thanks to [Joao Gante](https://huggingface.co/joaogante)!
-We are also benchmarking many instruction-tuned models at [declare-lab/flan-eval](https://github.com/declare-lab/flan-eval).
+We have a [live interactive demo](https://huggingface.co/spaces/joaogante/transformers_streaming) thanks
+to [Joao Gante](https://huggingface.co/joaogante)!
+We are also benchmarking many instruction-tuned models
+at [declare-lab/flan-eval](https://github.com/declare-lab/flan-eval).
 Our pretrained models are fully available on HuggingFace 🤗 :
 
-| Model                                                                     | Parameters | Instruction Data                                                                                                                                   | Training GPUs   |
-|---------------------------------------------------------------------------|------------|----------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
-| [Flan-Alpaca-Base](https://huggingface.co/declare-lab/flan-alpaca-base)   | 220M       | [Flan](https://github.com/google-research/FLAN), [Alpaca](https://github.com/tatsu-lab/stanford_alpaca)                                            | 1x A6000        |
-| [Flan-Alpaca-Large](https://huggingface.co/declare-lab/flan-alpaca-large) | 770M       | [Flan](https://github.com/google-research/FLAN), [Alpaca](https://github.com/tatsu-lab/stanford_alpaca)                                            | 1x A6000        |
-| [Flan-Alpaca-XL](https://huggingface.co/declare-lab/flan-alpaca-xl)       | 3B         | [Flan](https://github.com/google-research/FLAN), [Alpaca](https://github.com/tatsu-lab/stanford_alpaca)                                            | 1x A6000        |
-| [Flan-Alpaca-XXL](https://huggingface.co/declare-lab/flan-alpaca-xxl)     | 11B        | [Flan](https://github.com/google-research/FLAN), [Alpaca](https://github.com/tatsu-lab/stanford_alpaca)                                            | 4x A6000 (FSDP) |
-| [Flan-GPT4All-XL](https://huggingface.co/declare-lab/flan-gpt4all-xl)     | 3B         | [Flan](https://github.com/google-research/FLAN), [GPT4All](https://github.com/nomic-ai/gpt4all)                                                    | 1x A6000        |
-| [Flan-ShareGPT-XL](https://huggingface.co/declare-lab/flan-sharegpt-xl)   | 3B         | [Flan](https://github.com/google-research/FLAN), [ShareGPT](https://github.com/domeccleston/sharegpt)/[Vicuna](https://github.com/lm-sys/FastChat) | 1x A6000        |
+| Model                                                                            | Parameters | Instruction Data                                                                                                                                   | Training GPUs   |
+|----------------------------------------------------------------------------------|------------|----------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
+| [Flan-Alpaca-Base](https://huggingface.co/declare-lab/flan-alpaca-base)          | 220M       | [Flan](https://github.com/google-research/FLAN), [Alpaca](https://github.com/tatsu-lab/stanford_alpaca)                                            | 1x A6000        |
+| [Flan-Alpaca-Large](https://huggingface.co/declare-lab/flan-alpaca-large)        | 770M       | [Flan](https://github.com/google-research/FLAN), [Alpaca](https://github.com/tatsu-lab/stanford_alpaca)                                            | 1x A6000        |
+| [Flan-Alpaca-XL](https://huggingface.co/declare-lab/flan-alpaca-xl)              | 3B         | [Flan](https://github.com/google-research/FLAN), [Alpaca](https://github.com/tatsu-lab/stanford_alpaca)                                            | 1x A6000        |
+| [Flan-Alpaca-XXL](https://huggingface.co/declare-lab/flan-alpaca-xxl)            | 11B        | [Flan](https://github.com/google-research/FLAN), [Alpaca](https://github.com/tatsu-lab/stanford_alpaca)                                            | 4x A6000 (FSDP) |
+| [Flan-GPT4All-XL](https://huggingface.co/declare-lab/flan-gpt4all-xl)            | 3B         | [Flan](https://github.com/google-research/FLAN), [GPT4All](https://github.com/nomic-ai/gpt4all)                                                    | 1x A6000        |
+| [Flan-ShareGPT-XL](https://huggingface.co/declare-lab/flan-sharegpt-xl)          | 3B         | [Flan](https://github.com/google-research/FLAN), [ShareGPT](https://github.com/domeccleston/sharegpt)/[Vicuna](https://github.com/lm-sys/FastChat) | 1x A6000        |
+| [Flan-Alpaca-GPT4-XL*](https://huggingface.co/declare-lab/flan-alpaca-gpt4-xl)   | 3B         | [Flan](https://github.com/google-research/FLAN), [GPT4-Alpaca](https://github.com/Instruction-Tuning-with-GPT-4/GPT-4-LLM)                         | 1x A6000        |
+
+*recommended for better performance
 
 ### Why?
 
@@ -33,7 +38,7 @@ less diverse) instructions such as [Flan-T5](https://arxiv.org/abs/2210.11416).
 from transformers import pipeline
 
 prompt = "Write an email about an alpaca that likes flan"
-model = pipeline(model="declare-lab/flan-alpaca-xl")
+model = pipeline(model="declare-lab/flan-alpaca-gpt4-xl")
 model(prompt, max_length=128, do_sample=True)
 
 # Dear AlpacaFriend,
