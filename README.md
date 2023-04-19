@@ -111,7 +111,7 @@ with `--use_fsdp`.
 
 ```
 python inference.py test_model \
---path "outputs/model/xl/epoch=2-step=2436.ckpt" \
+--path "outputs/model/xl/epoch=2-step=2439.ckpt" \
 --prompt "Write an email about an alpaca that likes flan"
 ```
 
@@ -123,6 +123,6 @@ Replace `declare-lab/flan-alpaca-xl` with your desired HuggingFace repo.
 huggingface-cli login
 
 python inference.py export_to_hub \
---path "outputs/model/xl/epoch=2-step=2436.ckpt" \
+--path "outputs/model/xl/epoch=2-step=2439.ckpt" \
 --repo declare-lab/flan-alpaca-xl
 ```
