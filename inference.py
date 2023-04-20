@@ -52,7 +52,7 @@ def export_to_hub(path: str, repo: str, temp: str = "temp"):
         shutil.rmtree(temp)
 
     model = LightningModel.load_from_checkpoint(path)
-    model.model.save_pretrained(temp, safe_serialization=True)
+    model.model.save_pretrained(temp)
     model.tokenizer.save_pretrained(temp)
     del model  # Save memory?
 
