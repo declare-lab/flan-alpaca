@@ -1,5 +1,8 @@
 ## 🍮 🦙 Flan-Alpaca: Instruction Tuning from Humans and Machines
 
+📣 **FLAN-T5** is also useful in text-to-audio generation. Find our work at [https://github.com/declare-lab/tango](https://github.com/declare-lab/tango) if you are interested.
+
+
 This repository contains code for extending the [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca)
 synthetic instruction tuning to existing instruction-tuned models such as [Flan-T5](https://arxiv.org/abs/2210.11416).
 We have a [live interactive demo](https://huggingface.co/spaces/joaogante/transformers_streaming) thanks
